@@ -1,5 +1,5 @@
 import { Construct } from 'constructs';
-import { IVpc, Peer, Port } from 'aws-cdk-lib/aws-ec2';
+import { ISecurityGroup, IVpc, Peer, Port } from 'aws-cdk-lib/aws-ec2';
 import { BaseSecurityGroup } from '../base/base-security-group';
 import { EnvValues } from '../env/EnvValues';
 
@@ -10,15 +10,22 @@ export class AppSecurityGroupProps {
 }
 
 export class AppSecurityGroup extends Construct {
+  public readonly ec2SecurityGroup: ISecurityGroup;
+
   constructor(scope: Construct, id: string, props: AppSecurityGroupProps) {
     super(scope, id);
 
     const { namePrefix, envValues, vpc } = props;
 
-    this.createEc2SecurityGroup(namePrefix, envValues, vpc);
+    // EC2のセキュリティグループを作成
+    this.ec2SecurityGroup = this.createEc2SecurityGroup(namePrefix, envValues, vpc);
   }
 
-  private createEc2SecurityGroup(namePrefix: string, envValues: EnvValues, vpc: IVpc) {
+  private createEc2SecurityGroup(
+    namePrefix: string,
+    envValues: EnvValues,
+    vpc: IVpc,
+  ): ISecurityGroup {
     const sg = new BaseSecurityGroup(this, 'ec2', {
       securityGroupName: `${namePrefix}-ec2-sg`,
       vpc: vpc,
@@ -26,7 +33,9 @@ export class AppSecurityGroup extends Construct {
     });
 
     envValues.allowedIngressIpV4CIDRs.forEach((cidr) => {
-      sg.addIngressRule(Peer.ipv4(cidr), Port.tcp(80), 'Allow HTTP from Specific IP');
+      sg.addIngressRule(Peer.ipv4(cidr), Port.tcp(22), 'Allow SSH from Specific IP');
     });
+
+    return sg;
   }
 }

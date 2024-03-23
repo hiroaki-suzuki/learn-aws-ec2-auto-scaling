@@ -23,7 +23,13 @@
       "vpcCidr": "172.16.0.0/16",
       "allowedIngressIpV4CIDRs": [
         "0.0.0.0/0"
-      ]
+      ],
+      "scaleSchedule1StartCron": "05 * * * *",
+      "scaleSchedule1EndCron": "10 * * * *",
+      "scaleSchedule2StartCron": "15 12 * * *",
+      "scaleSchedule2StartDate": "2024-03-23 12:15",
+      "scaleSchedule2EndCron": "20 12 * * *",
+      "scaleSchedule2EndDate": "2024-03-23 12:20"
     },
     "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
     "@aws-cdk/core:checkSecretUsage": true,
