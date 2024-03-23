@@ -13,7 +13,7 @@ const envKey = app.node.tryGetContext('environment');
 const envValues: EnvValues = app.node.tryGetContext(envKey);
 const namePrefix = `${projectName}-${envValues.env}`;
 
-const stack = new Ec2AutoScalingStack(app, 'CdkStack', {
+const stack = new Ec2AutoScalingStack(app, namePrefix, {
   env: {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: 'ap-northeast-1',
